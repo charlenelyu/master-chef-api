@@ -41,19 +41,55 @@ const recipesDB = [
 const resolvers = {
   Query: {
     about: () => aboutMessage,
-    recipeList: () => recipesDB,
+    recipeList: () => recipesDB, // get all recipes
+    userList: ()=> usersDB
   },
   Mutation: {
-
+    createRecipe,
+    createUser,
   },
   Recipe: {
+    // match a recipe with its author
     author: ({author}) => {
       return usersDB.find((user) => {
         return user.name === author;
       })
     }
+  },
+  User: {
+    // match a user with all his posts
+    posts: ({name}) => {
+      return recipesDB.filter((recipe) => {
+        return recipe.author === name;
+      })
+    }
   }
 };
+
+function createRecipe(_, {recipe}) {
+  const userExist = usersDB.some((user) => user.name === recipe.author);
+  if (!userExist) {
+    throw new Error('User not found');
+  }
+  recipe.created = new Date().toDateString();
+  recipe.id = recipesDB.length + 1;
+  recipesDB.push(recipe);
+  return recipe;
+}
+
+function createUser(_, {name, email}) {
+  const nameToken = usersDB.some((user) => user.name === name);
+  if (nameToken) {
+    throw new Error('username exists');
+  }
+  const user = {
+    name: name,
+    email: email,
+    posts: []
+  }
+  usersDB.push(user);
+  return user;
+}
 
 const server = new ApolloServer({
   typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),

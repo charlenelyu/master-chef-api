@@ -11,9 +11,24 @@ type Recipe {
 type User {
   name: String!
   email: String!
+  posts: [Recipe]!
 }
 
 type Query {
   about: String!
   recipeList: [Recipe]!
+  userList: [User]!
+}
+
+type Mutation {
+  createRecipe(recipe: RecipeInputs!): Recipe!
+  createUser(name: String!, email: String!): User!
+}
+
+input RecipeInputs {
+  author: String!
+  ingredients: String
+  steps: [String]!
+  tag: String
+  title: String!
 }
