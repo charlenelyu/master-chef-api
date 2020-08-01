@@ -85,7 +85,6 @@ function createUser(_, {name, email}) {
   const user = {
     name: name,
     email: email,
-    posts: []
   }
   usersDB.push(user);
   return user;

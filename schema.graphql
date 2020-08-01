@@ -12,6 +12,7 @@ type User {
   name: String!
   email: String!
   posts: [Recipe]!
+  stars: [Recipe]!
 }
 
 type Query {
