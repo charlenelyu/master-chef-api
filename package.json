@@ -4,8 +4,7 @@
 	"description": "Pro MERN Stack (2nd Edition) API",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon -e js,graphql -w . -w .env server.js",
-		"lint": "eslint .",
+		"start": "nodemon -w server -e js,graphql server.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -13,20 +12,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"apollo-server-express": "^2.3.3",
-		"body-parser": "^1.19.0",
-		"cookie-parser": "^1.4.5",
-		"cors": "^2.8.5",
-		"dotenv": "^6.2.0",
 		"express": "^4.17.1",
-		"google-auth-library": "^2.0.2",
 		"graphql": "^14.6.0",
-		"jsonwebtoken": "^8.5.1",
 		"mongodb": "^3.5.9",
-		"nodemon": "^1.19.4"
+		"nodemon": "^2.0.4"
 	},
-	"devDependencies": {
-		"eslint": "^5.16.0",
-		"eslint-config-airbnb-base": "^13.2.0",
-		"eslint-plugin-import": "^2.21.2"
-	}
+	"devDependencies": {}
 }

@@ -1,0 +1,19 @@
+type Recipe {
+  id: ID!
+  author: User!
+  created: String!
+  ingredients: String
+  steps: [String]!
+  tag: String
+  title: String!
+}
+
+type User {
+  name: String!
+  email: String!
+}
+
+type Query {
+  about: String!
+  recipeList: [Recipe]!
+}
