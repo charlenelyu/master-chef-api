@@ -24,7 +24,6 @@ const recipesDB = [
   }
 ];
 
-
 const usersDB = [
   {
     name: "li",
@@ -39,7 +38,7 @@ const usersDB = [
 db.recipes.insertMany(recipesDB);
 db.users.insertMany(usersDB);
 const recipeCount = db.recipes.count();
-const userCount = db.recipes.count();
+const userCount = db.users.count();
 print('Inserted', recipeCount, 'recipes');
 print('Inserted', userCount, 'users');
 

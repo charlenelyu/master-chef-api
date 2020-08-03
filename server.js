@@ -1,70 +1,56 @@
 const fs = require('fs');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
+const { MongoClient } = require('mongodb');
+
+// replace this url
+const url = 'mongodb+srv://<username>:<password>@cluster0.w1lxr.mongodb.net/masterchef?retryWrites=true';
+
+let db;
 
 let aboutMessage = "Master Chef API v1.0";
-
-const usersDB = [
-  {
-    name: "li",
-    email: "xxx@gmail.com",
-  },
-  {
-    name: "ti",
-    email: "abc@outlook.com",
-  }
-]
-
-const recipesDB = [
-  {
-    id: '1',
-    title: "Test1",
-    author: "li",
-    // img: img1,
-    created: new Date('2020/07/29').toDateString(),
-    ingredients: "a",
-    steps: ["111111", "222222"],
-    tag: "aaaaaa",
-  },
-  {
-    id: '2',
-    title: "Test2",
-    author: "ti",
-    // img: img2,
-    created: new Date('2020/07/30').toDateString(),
-    ingredients: "a",
-    steps: ["111111", "222222"],
-    tag: "aaaaaa",
-  }
-];
 
 const resolvers = {
   Query: {
     about: () => aboutMessage,
-    recipeList: () => recipesDB, // get all recipes
-    userList: ()=> usersDB
+    recipeList,
+    userList,
   },
   Mutation: {
     createRecipe,
     createUser,
   },
   Recipe: {
-    // match a recipe with its author
-    author: ({author}) => {
-      return usersDB.find((user) => {
-        return user.name === author;
-      })
-    }
+    author, // match a recipe with its author
   },
   User: {
-    // match a user with all his posts
-    posts: ({name}) => {
-      return recipesDB.filter((recipe) => {
-        return recipe.author === name;
-      })
-    }
+    posts, // match a user with all his posts
   }
 };
+
+async function recipeList() {
+  const recipes = await db.collection('recipes').find({}).toArray();
+  return recipes;
+}
+
+async function userList() {
+  const users = await db.collection('users').find({}).toArray();
+  return users;
+}
+
+async function author({author}) {
+  const list = await userList();
+  return list.find((user) => {
+    return user.name === author;
+  })
+}
+
+async function posts({name}) {
+  const list = await recipeList();
+  return list.filter((recipe) => {
+    return recipe.author === name;
+  })
+}
 
 function createRecipe(_, {recipe}) {
   const userExist = usersDB.some((user) => user.name === recipe.author);
@@ -90,6 +76,13 @@ function createUser(_, {name, email}) {
   return user;
 }
 
+async function connectToDb() {
+  const client = new MongoClient(url, { useNewUrlParser: true });
+  await client.connect();
+  console.log('Connected to MongoDB at', url);
+  db = client.db();
+}
+
 const server = new ApolloServer({
   typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
   resolvers,
@@ -101,6 +94,13 @@ app.use(express.static('public'));
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-app.listen(3000, function () {
-  console.log('App started on port 3000');
-});
+(async function () {
+  try {
+    await connectToDb();
+    app.listen(3000, function () {
+      console.log('App started on port 3000');
+    });
+  } catch (err) {
+    console.log('ERROR:', err);
+  } 
+})();
