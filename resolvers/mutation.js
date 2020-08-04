@@ -1,3 +1,4 @@
+const { UserInputError } = require('apollo-server-express');
 const { getDB, getNextSequence } = require('../db.js');
 
 async function createRecipe(_, { recipe }) {
@@ -5,7 +6,7 @@ async function createRecipe(_, { recipe }) {
   const userCount = await db.collection('users')
     .countDocuments({ name: { $eq: recipe.author } });
   if (userCount === 0) {
-    throw new Error('User not found');
+    throw new UserInputError('User not found');
   }
   const newRecipe = Object.assign({}, recipe);
   newRecipe.created = new Date().toDateString();
@@ -21,7 +22,7 @@ async function createUser(_, { name, email }) {
   const userCount = await db.collection('users')
     .countDocuments({ name: { $eq: name } });
   if (userCount !== 0) {
-    throw new Error('username exists');
+    throw new UserInputError('username exists');
   }
   const user = {
     name,
