@@ -2,11 +2,12 @@ type Recipe {
   _id: ID!
   id: ID!
   author: User!
-  created: String!
-  ingredients: String
-  steps: [String]!
-  tag: String
   title: String!
+  img: String
+  created: String!
+  ingredients: [String]
+  steps: [String]
+  tag: String
 }
 
 type User {
@@ -24,14 +25,16 @@ type Query {
 }
 
 type Mutation {
+  setAboutMessage(message: String!): String
   createRecipe(recipe: RecipeInputs!): Recipe!
   createUser(name: String!, email: String!): User!
 }
 
 input RecipeInputs {
-  author: String!
-  ingredients: String
-  steps: [String]!
-  tag: String
   title: String!
+  author: String!
+  img: String
+  tag: String
+  ingredients: [String]
+  steps: [String]
 }
