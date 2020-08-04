@@ -1,0 +1,36 @@
+const fs = require('fs');
+const { ApolloServer } = require('apollo-server-express');
+
+const { getAboutMessage, recipeList, userList } = require('./resolvers/query.js');
+const { createRecipe, createUser } = require('./resolvers/mutation.js');
+const { author } = require('./resolvers/recipe.js');
+const { posts } = require('./resolvers/user.js');
+
+const resolvers = {
+  Query: {
+    about: getAboutMessage,
+    recipeList,
+    userList,
+  },
+  Mutation: {
+    createRecipe,
+    createUser,
+  },
+  Recipe: {
+    author, // match recipe with user
+  },
+  User: {
+    posts, // match user with posts
+  },
+};
+
+const server = new ApolloServer({
+  typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
+  resolvers,
+});
+
+function installHandler(app) {
+  server.applyMiddleware({ app, path: '/graphql' });
+}
+
+module.exports = { installHandler };
