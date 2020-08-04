@@ -26,7 +26,7 @@ const resolvers = {
   },
   User: {
     posts, // match a user with all his posts
-  }
+  },
 };
 
 async function getNextSequence(name) {
@@ -48,39 +48,40 @@ async function userList() {
   return users;
 }
 
-function author({author}) {
-  return db.collection('users').findOne({ name: { $eq : author } });
+function author(parent) {
+  return db.collection('users').findOne({ name: { $eq: parent.author } });
 }
 
-function posts({name}) {
+function posts({ name }) {
   return db.collection('recipes')
-    .find({ author: { $eq : name } }).toArray();
+    .find({ author: { $eq: name } }).toArray();
 }
 
-async function createRecipe(_, {recipe}) {
+async function createRecipe(_, { recipe }) {
   const userCount = await db.collection('users')
-    .countDocuments({ name : { $eq : recipe.author }});
+    .countDocuments({ name: { $eq: recipe.author } });
   if (userCount === 0) {
     throw new Error('User not found');
   }
-  recipe.created = new Date().toDateString();
-  recipe.id = await getNextSequence('recipes');
-  const result = await db.collection('recipes').insertOne(recipe);
+  const newRecipe = Object.assign({}, recipe);
+  newRecipe.created = new Date().toDateString();
+  newRecipe.id = await getNextSequence('recipes');
+  const result = await db.collection('recipes').insertOne(newRecipe);
   const savedRecipe = await db.collection('recipes')
     .findOne({ _id: result.insertedId });
   return savedRecipe;
 }
 
-async function createUser(_, {name, email}) {
+async function createUser(_, { name, email }) {
   const userCount = await db.collection('users')
-    .countDocuments({ name : { $eq : name }});
+    .countDocuments({ name: { $eq: name } });
   if (userCount !== 0) {
     throw new Error('username exists');
   }
   const user = {
-    name: name,
-    email: email,
-  }
+    name,
+    email,
+  };
   const result = await db.collection('users').insertOne(user);
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
@@ -105,13 +106,13 @@ server.applyMiddleware({ app, path: '/graphql' });
 
 const port = process.env.API_SERVER_PORT || 3000;
 
-(async function () {
+(async function start() {
   try {
     await connectToDb();
-    app.listen(port, function () {
+    app.listen(port, () => {
       console.log(`API started on port ${port}`);
     });
   } catch (err) {
     console.log('ERROR:', err);
-  } 
-})();
+  }
+}());

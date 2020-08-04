@@ -1,3 +1,6 @@
+/* global db print */
+/* eslint no-restricted-globals: "off" */
+
 db.recipes.remove({});
 db.users.remove({});
 
@@ -32,8 +35,8 @@ const usersDB = [
   {
     name: 'ti',
     email: 'abc@outlook.com',
-  }
-]
+  },
+];
 
 db.recipes.insertMany(recipesDB);
 db.users.insertMany(usersDB);
