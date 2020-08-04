@@ -1,13 +1,11 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-use-before-define */
 const fs = require('fs');
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { MongoClient } = require('mongodb');
 
 // replace this url
-// const url = 'mongodb+srv://<username>:<password>@cluster0.w1lxr.mongodb.net/masterchef?retryWrites=true';
-const url = 'mongodb+srv://tianhui:3255713988@cluster0.w1lxr.mongodb.net/masterchef?retryWrites=true';
+const url = process.env.DB_URL;
 
 let db;
 
@@ -59,8 +57,6 @@ function posts({name}) {
     .find({ author: { $eq : name } }).toArray();
 }
 
-
-// 使用counter来计算id - delete的时候也要减counter
 async function createRecipe(_, {recipe}) {
   const userCount = await db.collection('users')
     .countDocuments({ name : { $eq : recipe.author }});
@@ -107,11 +103,13 @@ const app = express();
 
 server.applyMiddleware({ app, path: '/graphql' });
 
+const port = process.env.API_SERVER_PORT || 3000;
+
 (async function () {
   try {
     await connectToDb();
-    app.listen(3000, function () {
-      console.log('API started on port 3000');
+    app.listen(port, function () {
+      console.log(`API started on port ${port}`);
     });
   } catch (err) {
     console.log('ERROR:', err);

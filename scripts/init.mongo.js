@@ -34,6 +34,7 @@ const usersDB = [
     email: 'abc@outlook.com',
   }
 ]
+
 db.recipes.insertMany(recipesDB);
 db.users.insertMany(usersDB);
 const recipeCount = db.recipes.count();

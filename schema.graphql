@@ -25,7 +25,6 @@ type Query {
 }
 
 type Mutation {
-  setAboutMessage(message: String!): String
   createRecipe(recipe: RecipeInputs!): Recipe!
   createUser(name: String!, email: String!): User!
 }
