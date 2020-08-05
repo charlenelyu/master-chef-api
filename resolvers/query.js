@@ -18,4 +18,10 @@ async function userList() {
   return users;
 }
 
-module.exports = { getAboutMessage, recipeList, userList };
+async function recipeInfo(_, { id }) {
+  const db = getDB();
+  const recipeOne = await db.collection('recipes').findOne({ id });
+  return recipeOne;
+}
+
+module.exports = { getAboutMessage, recipeList, userList, recipeInfo };

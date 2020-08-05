@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { ApolloServer } = require('apollo-server-express');
 
-const { getAboutMessage, recipeList, userList } = require('./resolvers/query.js');
+const { getAboutMessage, recipeList, userList, recipeInfo } = require('./resolvers/query.js');
 const { createRecipe, createUser } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
 const { posts } = require('./resolvers/user.js');
@@ -11,6 +11,7 @@ const resolvers = {
     about: getAboutMessage,
     recipeList,
     userList,
+    recipeInfo,
   },
   Mutation: {
     createRecipe,

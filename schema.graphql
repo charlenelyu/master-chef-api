@@ -22,9 +22,11 @@ type Query {
   about: String!
   recipeList: [Recipe]!
   userList: [User]!
+  recipeInfo(id: ID!): Recipe
 }
 
 type Mutation {
+  setAboutMessage(message: String!): String
   createRecipe(recipe: RecipeInputs!): Recipe!
   createUser(name: String!, email: String!): User!
 }
