@@ -11,6 +11,9 @@ async function createRecipe(_, { recipe }) {
   const newRecipe = Object.assign({}, recipe);
   newRecipe.created = new Date().toDateString();
   newRecipe.id = await getNextSequence('recipes');
+  if (recipe.img === '') {
+    newRecipe.img = 'https://res.cloudinary.com/masterchef/image/upload/v1596686575/coming-soon_jipkbn.jpg';
+  }
   const result = await db.collection('recipes').insertOne(newRecipe);
   const savedRecipe = await db.collection('recipes')
     .findOne({ _id: result.insertedId });
