@@ -37,4 +37,31 @@ async function createUser(_, { name, email }) {
   return savedUser;
 }
 
-module.exports = { createRecipe, createUser };
+async function deleteRecipe(_, { id }) {
+  const db = getDB();
+  const recipe = await db.collection('recipes').findOne({ id });
+  if (!recipe) return false;
+  const result = await db.collection('recipes').deleteOne({ id });
+  return result.deletedCount === 1;
+}
+
+async function updateRecipe(_, { id, changes }) {
+  const db = getDB();
+  const recipe = await db.collection('recipes').findOne({ id });
+  if (!recipe) {
+    throw new UserInputError("recipe doesn't exist");
+  }
+  if (Object.keys(changes).length === 0) {
+    throw new UserInputError('must specify a field');
+  }
+  await db.collection('recipes').updateOne({ id }, { $set: changes });
+  const savedIssue = await db.collection('recipes').findOne({ id });
+  return savedIssue;
+}
+
+module.exports = {
+  createRecipe,
+  createUser,
+  deleteRecipe,
+  updateRecipe,
+};
