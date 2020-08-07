@@ -5,10 +5,10 @@ type Recipe {
   title: String!
   img: String!
   created: String!
-  description: String
-  ingredients: [String]
-  steps: [String]
-  tags: [String]
+  description: String!
+  ingredients: [String]!
+  steps: [String]!
+  tags: [String]!
 }
 
 type User {

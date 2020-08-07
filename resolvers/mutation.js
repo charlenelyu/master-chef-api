@@ -1,19 +1,39 @@
 const { UserInputError } = require('apollo-server-express');
 const { getDB, getNextSequence } = require('../db.js');
 
+function validateInput(recipe) {
+  const {
+    img,
+    description,
+    ingredients,
+    steps,
+    tags,
+  } = recipe;
+  const newRecipe = Object.assign({}, recipe);
+  if (img === '') {
+    newRecipe.img = 'https://res.cloudinary.com/masterchef/image/upload/v1596686575/coming-soon_jipkbn.jpg';
+  }
+  if (description === undefined) newRecipe.description = '';
+  if (ingredients === undefined) newRecipe.ingredients = [];
+  if (steps === undefined) newRecipe.steps = [];
+  if (tags === undefined) newRecipe.tags = [];
+  return newRecipe;
+}
+
 async function createRecipe(_, { recipe }) {
   const db = getDB();
+
+  const { author } = recipe;
   const userCount = await db.collection('users')
-    .countDocuments({ name: { $eq: recipe.author } });
+    .countDocuments({ name: { $eq: author } });
   if (userCount === 0) {
     throw new UserInputError('User not found');
   }
-  const newRecipe = Object.assign({}, recipe);
+
+  const newRecipe = validateInput(recipe);
   newRecipe.created = new Date().toDateString();
   newRecipe.id = await getNextSequence('recipes');
-  if (recipe.img === '') {
-    newRecipe.img = 'https://res.cloudinary.com/masterchef/image/upload/v1596686575/coming-soon_jipkbn.jpg';
-  }
+
   const result = await db.collection('recipes').insertOne(newRecipe);
   const savedRecipe = await db.collection('recipes')
     .findOne({ _id: result.insertedId });
@@ -54,7 +74,8 @@ async function updateRecipe(_, { id, changes }) {
   if (Object.keys(changes).length === 0) {
     throw new UserInputError('must specify a field');
   }
-  await db.collection('recipes').updateOne({ id }, { $set: changes });
+  const newValue = validateInput(changes);
+  await db.collection('recipes').updateOne({ id }, { $set: newValue });
   const savedIssue = await db.collection('recipes').findOne({ id });
   return savedIssue;
 }
