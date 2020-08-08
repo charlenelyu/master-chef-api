@@ -140,10 +140,12 @@ const userData = [
   {
     name: 'li',
     email: 'li@gmail.com',
+    password: '$2a$10$ShlY3ovxAnCHiyU03vz7tur9sUn93Xs9Tfewpy3NRWDY6u6XwH9.i',
   },
   {
     name: 'lyu',
     email: 'lyu@outlook.com',
+    password: '$2a$10$661r/7muYQMZaphDsVqsauPZe69CVvL0Cz6efnp8DoEwf0Fj1w.ea',
   },
 ];
 

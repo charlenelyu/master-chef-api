@@ -15,6 +15,7 @@ type User {
   _id: ID!
   name: String!
   email: String!
+  password: String!
   posts: [Recipe]!
   stars: [Recipe]!
 }
@@ -29,7 +30,7 @@ type Query {
 type Mutation {
   setAboutMessage(message: String!): String
   createRecipe(recipe: RecipeInputs!): Recipe!
-  createUser(name: String!, email: String!): User!
+  createUser(user: UserInputs!): User!
   deleteRecipe(id: ID!): Boolean!
   updateRecipe(id: ID!, changes: UpdateRecipeInput!): Recipe!
 }
@@ -42,6 +43,12 @@ input RecipeInputs {
   ingredients: [String]
   steps: [String]
   tags: [String]
+}
+
+input UserInputs {
+  name: String!
+  email: String!
+  password: String!
 }
 
 input UpdateRecipeInput {

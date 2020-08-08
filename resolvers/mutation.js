@@ -1,4 +1,5 @@
 const { UserInputError } = require('apollo-server-express');
+const bcrypt = require('bcryptjs');
 const { getDB, getNextSequence } = require('../db.js');
 
 function validateInput(recipe) {
@@ -40,18 +41,19 @@ async function createRecipe(_, { recipe }) {
   return savedRecipe;
 }
 
-async function createUser(_, { name, email }) {
+async function createUser(_, { user }) {
   const db = getDB();
   const userCount = await db.collection('users')
-    .countDocuments({ name: { $eq: name } });
+    .countDocuments({ name: { $eq: user.name } });
   if (userCount !== 0) {
     throw new UserInputError('username exists');
   }
-  const user = {
-    name,
-    email,
+  const hashed = await bcrypt.hash(user.password, 10);
+  const userData = {
+    ...user,
+    password: hashed,
   };
-  const result = await db.collection('users').insertOne(user);
+  const result = await db.collection('users').insertOne(userData);
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
   return savedUser;
