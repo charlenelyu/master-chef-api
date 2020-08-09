@@ -9,9 +9,10 @@ const {
 } = require('./resolvers/query.js');
 const {
   createRecipe,
-  createUser,
   deleteRecipe,
   updateRecipe,
+  createUser,
+  login,
 } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
 const { posts } = require('./resolvers/user.js');
@@ -25,9 +26,10 @@ const resolvers = {
   },
   Mutation: {
     createRecipe,
-    createUser,
     deleteRecipe,
     updateRecipe,
+    createUser,
+    login,
   },
   Recipe: {
     author, // match recipe with user

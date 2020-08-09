@@ -1,5 +1,6 @@
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { getDB, getNextSequence } = require('../db.js');
 
 function validateInput(recipe) {
@@ -25,6 +26,7 @@ async function createRecipe(_, { recipe }) {
   const db = getDB();
 
   const { author } = recipe;
+  // TODO: change name to email
   const userCount = await db.collection('users')
     .countDocuments({ name: { $eq: author } });
   if (userCount === 0) {
@@ -39,24 +41,6 @@ async function createRecipe(_, { recipe }) {
   const savedRecipe = await db.collection('recipes')
     .findOne({ _id: result.insertedId });
   return savedRecipe;
-}
-
-async function createUser(_, { user }) {
-  const db = getDB();
-  const userCount = await db.collection('users')
-    .countDocuments({ name: { $eq: user.name } });
-  if (userCount !== 0) {
-    throw new UserInputError('username exists');
-  }
-  const hashed = await bcrypt.hash(user.password, 10);
-  const userData = {
-    ...user,
-    password: hashed,
-  };
-  const result = await db.collection('users').insertOne(userData);
-  const savedUser = await db.collection('users')
-    .findOne({ _id: result.insertedId });
-  return savedUser;
 }
 
 async function deleteRecipe(_, { id }) {
@@ -82,9 +66,46 @@ async function updateRecipe(_, { id, changes }) {
   return savedIssue;
 }
 
+async function createUser(_, { user }) {
+  const db = getDB();
+  // TODO: change name to email
+  const userCount = await db.collection('users')
+    .countDocuments({ name: { $eq: user.name } });
+  if (userCount !== 0) {
+    throw new UserInputError('username exists');
+  }
+  const hashed = await bcrypt.hash(user.password, 10);
+  const userData = {
+    ...user,
+    password: hashed,
+  };
+  const result = await db.collection('users').insertOne(userData);
+  const savedUser = await db.collection('users')
+    .findOne({ _id: result.insertedId });
+  // TODO: change name to email
+  const token = jwt.sign({ name: savedUser.name }, 'thisisasecret');
+  return { user: savedUser, token };
+}
+
+async function login(_, { email, password }) {
+  const db = getDB();
+  const user = await db.collection('users').findOne({ email });
+  if (!user) {
+    throw new UserInputError('email does not exist');
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new UserInputError('password invalid');
+  }
+  // TODO: change name to email
+  const token = jwt.sign({ name: user.name }, 'thisisasecret');
+  return { user, token };
+}
+
 module.exports = {
   createRecipe,
-  createUser,
   deleteRecipe,
   updateRecipe,
+  createUser,
+  login,
 };

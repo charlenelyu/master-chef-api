@@ -20,6 +20,11 @@ type User {
   stars: [Recipe]!
 }
 
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
 type Query {
   about: String!
   recipeList: [Recipe]!
@@ -29,8 +34,9 @@ type Query {
 
 type Mutation {
   setAboutMessage(message: String!): String
+  createUser(user: UserInputs!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
   createRecipe(recipe: RecipeInputs!): Recipe!
-  createUser(user: UserInputs!): User!
   deleteRecipe(id: ID!): Boolean!
   updateRecipe(id: ID!, changes: UpdateRecipeInput!): Recipe!
 }
