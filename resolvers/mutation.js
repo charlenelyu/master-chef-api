@@ -2,7 +2,7 @@ require('dotenv').config();
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcryptjs');
 const { getDB, getNextSequence } = require('../db.js');
-const { getToken } = require('../auth.js');
+// const { getToken } = require('../auth.js');
 
 function validateInput(recipe) {
   const {
@@ -62,8 +62,8 @@ async function updateRecipe(_, { id, changes }) {
   }
   const newValue = validateInput(changes);
   await db.collection('recipes').updateOne({ id }, { $set: newValue });
-  const savedIssue = await db.collection('recipes').findOne({ id });
-  return savedIssue;
+  const savedRecipe = await db.collection('recipes').findOne({ id });
+  return savedRecipe;
 }
 
 async function createUser(_, { user }) {
@@ -86,28 +86,29 @@ async function createUser(_, { user }) {
   const result = await db.collection('users').insertOne(userData);
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
-  const token = getToken(savedUser);
-  return { user: savedUser, token };
+  return savedUser;
+  // const token = getToken(savedUser);
+  // return { user: savedUser, token };
 }
 
-async function login(_, { email, password }) {
-  const db = getDB();
-  const user = await db.collection('users').findOne({ email });
-  if (!user) {
-    throw new UserInputError('email does not exist');
-  }
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw new UserInputError('password invalid');
-  }
-  const token = getToken(user);
-  return { user, token };
-}
+// async function login(_, { email, password }) {
+//   const db = getDB();
+//   const user = await db.collection('users').findOne({ email });
+//   if (!user) {
+//     throw new UserInputError('email does not exist');
+//   }
+//   const isMatch = await bcrypt.compare(password, user.password);
+//   if (!isMatch) {
+//     throw new UserInputError('password invalid');
+//   }
+//   const token = getToken(user);
+//   return { user, token };
+// }
 
 module.exports = {
   createRecipe,
   deleteRecipe,
   updateRecipe,
   createUser,
-  login,
+  // login,
 };

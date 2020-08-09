@@ -12,10 +12,11 @@ const {
   deleteRecipe,
   updateRecipe,
   createUser,
-  login,
+  // login,
 } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
 const { posts } = require('./resolvers/user.js');
+const auth = require('./auth.js');
 
 const resolvers = {
   Query: {
@@ -29,7 +30,7 @@ const resolvers = {
     deleteRecipe,
     updateRecipe,
     createUser,
-    login,
+    // login,
   },
   Recipe: {
     author, // match recipe with user
@@ -39,9 +40,15 @@ const resolvers = {
   },
 };
 
+function getContext({ req }) {
+  const user = auth.getUser(req);
+  return { user };
+}
+
 const server = new ApolloServer({
   typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
   resolvers,
+  context: getContext,
   formatError: (error) => {
     console.log(error);
     return error;
