@@ -28,7 +28,7 @@ type AuthPayload {
 type Query {
   about: String!
   recipeList: [Recipe]!
-  userList: [User]!
+  "DELETED! userList: [User]!"
   recipeInfo(id: ID!): Recipe
 }
 

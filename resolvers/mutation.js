@@ -1,14 +1,8 @@
 require('dotenv').config();
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { getDB, getNextSequence } = require('../db.js');
-
-let { JWT_SECRET } = process.env;
-if (!JWT_SECRET) {
-  JWT_SECRET = 'tempjwtsecretfordevonly';
-  console.log('Missing env var JWT_SECRET. Using unsafe dev secret');
-}
+const { getToken } = require('../auth.js');
 
 function validateInput(recipe) {
   const {
@@ -33,7 +27,6 @@ async function createRecipe(_, { recipe }) {
   const db = getDB();
 
   const { author } = recipe;
-  // TODO: change name to email
   const userCount = await db.collection('users')
     .countDocuments({ name: { $eq: author } });
   if (userCount === 0) {
@@ -75,11 +68,15 @@ async function updateRecipe(_, { id, changes }) {
 
 async function createUser(_, { user }) {
   const db = getDB();
-  // TODO: change name to email
-  const userCount = await db.collection('users')
+  const nameCount = await db.collection('users')
     .countDocuments({ name: { $eq: user.name } });
-  if (userCount !== 0) {
-    throw new UserInputError('username exists');
+  if (nameCount !== 0) {
+    throw new UserInputError('username has been taken');
+  }
+  const emailCount = await db.collection('users')
+    .countDocuments({ email: { $eq: user.email } });
+  if (emailCount !== 0) {
+    throw new UserInputError('email exists');
   }
   const hashed = await bcrypt.hash(user.password, 10);
   const userData = {
@@ -89,8 +86,7 @@ async function createUser(_, { user }) {
   const result = await db.collection('users').insertOne(userData);
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
-  // TODO: change name to email
-  const token = jwt.sign({ name: savedUser.name }, JWT_SECRET);
+  const token = getToken(savedUser);
   return { user: savedUser, token };
 }
 
@@ -104,8 +100,7 @@ async function login(_, { email, password }) {
   if (!isMatch) {
     throw new UserInputError('password invalid');
   }
-  // TODO: change name to email
-  const token = jwt.sign({ name: user.name }, JWT_SECRET);
+  const token = getToken(user);
   return { user, token };
 }
 

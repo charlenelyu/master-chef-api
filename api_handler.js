@@ -4,7 +4,7 @@ const { ApolloServer } = require('apollo-server-express');
 const {
   getAboutMessage,
   recipeList,
-  userList,
+  // userList,
   recipeInfo,
 } = require('./resolvers/query.js');
 const {
@@ -21,7 +21,7 @@ const resolvers = {
   Query: {
     about: getAboutMessage,
     recipeList,
-    userList,
+    // userList,
     recipeInfo,
   },
   Mutation: {

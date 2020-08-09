@@ -12,11 +12,11 @@ async function recipeList() {
   return recipes;
 }
 
-async function userList() {
-  const db = getDB();
-  const users = await db.collection('users').find({}).toArray();
-  return users;
-}
+// async function userList() {
+//   const db = getDB();
+//   const users = await db.collection('users').find({}).toArray();
+//   return users;
+// }
 
 async function recipeInfo(_, { id }) {
   const db = getDB();
@@ -24,4 +24,9 @@ async function recipeInfo(_, { id }) {
   return recipeOne;
 }
 
-module.exports = { getAboutMessage, recipeList, userList, recipeInfo };
+module.exports = {
+  getAboutMessage,
+  recipeList,
+  // userList,
+  recipeInfo,
+};
