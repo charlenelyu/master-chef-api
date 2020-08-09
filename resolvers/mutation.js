@@ -1,7 +1,14 @@
+require('dotenv').config();
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getDB, getNextSequence } = require('../db.js');
+
+let { JWT_SECRET } = process.env;
+if (!JWT_SECRET) {
+  JWT_SECRET = 'tempjwtsecretfordevonly';
+  console.log('Missing env var JWT_SECRET. Using unsafe dev secret');
+}
 
 function validateInput(recipe) {
   const {
@@ -83,7 +90,7 @@ async function createUser(_, { user }) {
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
   // TODO: change name to email
-  const token = jwt.sign({ name: savedUser.name }, 'thisisasecret');
+  const token = jwt.sign({ name: savedUser.name }, JWT_SECRET);
   return { user: savedUser, token };
 }
 
@@ -98,7 +105,7 @@ async function login(_, { email, password }) {
     throw new UserInputError('password invalid');
   }
   // TODO: change name to email
-  const token = jwt.sign({ name: user.name }, 'thisisasecret');
+  const token = jwt.sign({ name: user.name }, JWT_SECRET);
   return { user, token };
 }
 
