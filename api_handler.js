@@ -1,4 +1,5 @@
 const fs = require('fs');
+require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 
 const {
@@ -58,7 +59,10 @@ const server = new ApolloServer({
 });
 
 function installHandler(app) {
-  server.applyMiddleware({ app, path: '/graphql' });
+  const origin = process.env.UI_SERVER_ORIGIN || 'http://localhost:8000';
+  const methods = 'POST';
+  const cors = { origin, methods, credentials: true };
+  server.applyMiddleware({ app, path: '/graphql', cors });
 }
 
 module.exports = { installHandler };

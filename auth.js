@@ -1,7 +1,9 @@
+require('dotenv').config();
 const Router = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
 
 const { getDB } = require('./db.js');
 
@@ -14,6 +16,9 @@ if (!JWT_SECRET) {
 const routes = new Router();
 
 routes.use(bodyParser.json());
+
+const origin = process.env.UI_SERVER_ORIGIN || 'http://localhost:8000';
+routes.use(cors({ origin, credentials: true }));
 
 function getUser(req) {
   const token = req.cookies.jwt;
@@ -49,7 +54,7 @@ routes.post('/user', (req, res) => {
   res.send(getUser(req));
 });
 
-module.exports = { routes };
+module.exports = { routes, getUser };
 
 // function getToken(user) {
 //   const { name, email } = user;
