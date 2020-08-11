@@ -45,9 +45,14 @@ routes.post('/login', async (req, res) => {
   const credentials = {
     signedIn: true, name: user.name, email: user.email,
   };
-  const token = jwt.sign(credentials, JWT_SECRET);
+  const token = jwt.sign(credentials, JWT_SECRET, { expiresIn: '7d' });
   res.cookie('jwt', token, { httpOnly: true });
   res.json(credentials);
+});
+
+routes.post('/signout', async (req, res) => {
+  res.clearCookie('jwt');
+  res.json({ status: 'ok' });
 });
 
 routes.post('/user', (req, res) => {
