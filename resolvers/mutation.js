@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const bcrypt = require('bcryptjs');
 const { getDB, getNextSequence } = require('../db.js');
 // const { getToken } = require('../auth.js');
@@ -23,39 +23,52 @@ function validateInput(recipe) {
   return newRecipe;
 }
 
-async function createRecipe(_, { recipe }) {
+async function createRecipe(_, { recipe }, { user }) {
   const db = getDB();
-
-  const { author } = recipe;
-  const userCount = await db.collection('users')
-    .countDocuments({ name: { $eq: author } });
-  if (userCount === 0) {
-    throw new UserInputError('User not found');
+  if (!user || !user.signedIn) {
+    throw new AuthenticationError('you must log in');
   }
-
+  // const { author } = recipe;
+  // const userCount = await db.collection('users')
+  //   .countDocuments({ name: { $eq: author } });
+  // if (userCount === 0) {
+  //   throw new UserInputError('User not found');
+  // }
   const newRecipe = validateInput(recipe);
   newRecipe.created = new Date().toDateString();
   newRecipe.id = await getNextSequence('recipes');
-
+  newRecipe.author = user.name;
   const result = await db.collection('recipes').insertOne(newRecipe);
   const savedRecipe = await db.collection('recipes')
     .findOne({ _id: result.insertedId });
   return savedRecipe;
 }
 
-async function deleteRecipe(_, { id }) {
+async function deleteRecipe(_, { id }, { user }) {
   const db = getDB();
+  if (!user || !user.signedIn) {
+    throw new AuthenticationError('you must log in');
+  }
   const recipe = await db.collection('recipes').findOne({ id });
   if (!recipe) return false;
+  if (recipe.author !== user.name) {
+    throw new AuthenticationError('you can only delete your own post');
+  }
   const result = await db.collection('recipes').deleteOne({ id });
   return result.deletedCount === 1;
 }
 
-async function updateRecipe(_, { id, changes }) {
+async function updateRecipe(_, { id, changes }, { user }) {
   const db = getDB();
+  if (!user || !user.signedIn) {
+    throw new AuthenticationError('you must log in');
+  }
   const recipe = await db.collection('recipes').findOne({ id });
   if (!recipe) {
     throw new UserInputError("recipe doesn't exist");
+  }
+  if (recipe.author !== user.name) {
+    throw new AuthenticationError('you can only edit your own post');
   }
   if (Object.keys(changes).length === 0) {
     throw new UserInputError('must specify a field');
