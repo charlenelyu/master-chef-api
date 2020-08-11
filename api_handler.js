@@ -7,6 +7,7 @@ const {
   recipeList,
   // userList,
   recipeInfo,
+  mypost,
 } = require('./resolvers/query.js');
 const {
   createRecipe,
@@ -25,6 +26,7 @@ const resolvers = {
     recipeList,
     // userList,
     recipeInfo,
+    mypost,
   },
   Mutation: {
     createRecipe,
