@@ -17,7 +17,7 @@ const {
   createUser,
 } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
-const { posts } = require('./resolvers/user.js');
+const { email, password, posts } = require('./resolvers/user.js');
 const auth = require('./auth.js');
 
 const resolvers = {
@@ -39,6 +39,8 @@ const resolvers = {
     author, // match recipe with user
   },
   User: {
+    email,
+    password,
     posts, // match user with posts
   },
 };
