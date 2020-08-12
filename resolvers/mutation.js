@@ -28,12 +28,6 @@ async function createRecipe(_, { recipe }, { user }) {
   if (!user || !user.signedIn) {
     throw new AuthenticationError('you must log in');
   }
-  // const { author } = recipe;
-  // const userCount = await db.collection('users')
-  //   .countDocuments({ name: { $eq: author } });
-  // if (userCount === 0) {
-  //   throw new UserInputError('User not found');
-  // }
   const newRecipe = validateInput(recipe);
   newRecipe.created = new Date().toDateString();
   newRecipe.id = await getNextSequence('recipes');
@@ -100,28 +94,11 @@ async function createUser(_, { user }) {
   const savedUser = await db.collection('users')
     .findOne({ _id: result.insertedId });
   return savedUser;
-  // const token = getToken(savedUser);
-  // return { user: savedUser, token };
 }
-
-// async function login(_, { email, password }) {
-//   const db = getDB();
-//   const user = await db.collection('users').findOne({ email });
-//   if (!user) {
-//     throw new UserInputError('email does not exist');
-//   }
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) {
-//     throw new UserInputError('password invalid');
-//   }
-//   const token = getToken(user);
-//   return { user, token };
-// }
 
 module.exports = {
   createRecipe,
   deleteRecipe,
   updateRecipe,
   createUser,
-  // login,
 };

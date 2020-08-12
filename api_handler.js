@@ -7,14 +7,14 @@ const {
   recipeList,
   // userList,
   recipeInfo,
-  mypost,
+  // mypost,
+  me,
 } = require('./resolvers/query.js');
 const {
   createRecipe,
   deleteRecipe,
   updateRecipe,
   createUser,
-  // login,
 } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
 const { posts } = require('./resolvers/user.js');
@@ -26,14 +26,14 @@ const resolvers = {
     recipeList,
     // userList,
     recipeInfo,
-    mypost,
+    // mypost,
+    me,
   },
   Mutation: {
     createRecipe,
     deleteRecipe,
     updateRecipe,
     createUser,
-    // login,
   },
   Recipe: {
     author, // match recipe with user

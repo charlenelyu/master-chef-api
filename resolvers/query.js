@@ -26,14 +26,24 @@ async function recipeInfo(_, { id }) {
   return recipeOne;
 }
 
-async function mypost(_, args, { user }) {
+// async function mypost(_, args, { user }) {
+//   const db = getDB();
+//   if (!user || !user.signedIn) {
+//     throw new AuthenticationError('you must log in');
+//   }
+//   const recipes = await db.collection('recipes')
+//     .find({ author: { $eq: user.name } }).toArray();
+//   return recipes;
+// }
+
+async function me(_, args, { user }) {
   const db = getDB();
   if (!user || !user.signedIn) {
     throw new AuthenticationError('you must log in');
   }
-  const recipes = await db.collection('recipes')
-    .find({ author: { $eq: user.name } }).toArray();
-  return recipes;
+  const userOne = await db.collection('users')
+    .findOne({ name: { $eq: user.name } });
+  return userOne;
 }
 
 module.exports = {
@@ -41,5 +51,6 @@ module.exports = {
   recipeList,
   // userList,
   recipeInfo,
-  mypost,
+  // mypost,
+  me,
 };

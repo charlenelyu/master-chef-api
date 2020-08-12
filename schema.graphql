@@ -25,7 +25,8 @@ type Query {
   recipeList: [Recipe]!
   "DELETED! userList: [User]!"
   recipeInfo(id: ID!): Recipe
-  mypost: [Recipe]!
+  "DELETED mypost: [Recipe]!"
+  me: User!
 }
 
 type Mutation {
