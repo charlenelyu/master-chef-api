@@ -15,6 +15,7 @@ const {
   deleteRecipe,
   updateRecipe,
   createUser,
+  updateAvatar,
 } = require('./resolvers/mutation.js');
 const { author } = require('./resolvers/recipe.js');
 const { email, password, posts } = require('./resolvers/user.js');
@@ -34,6 +35,7 @@ const resolvers = {
     deleteRecipe,
     updateRecipe,
     createUser,
+    updateAvatar,
   },
   Recipe: {
     author, // match recipe with user

@@ -90,6 +90,9 @@ async function createUser(_, { user }) {
   const userData = {
     ...user,
     password: hashed,
+    avatar: Math.random() < 0.5
+      ? 'https://res.cloudinary.com/masterchef/image/upload/v1597214676/avatar1_gyl0bj.png'
+      : 'https://res.cloudinary.com/masterchef/image/upload/v1597214676/avatar2_zn99ij.png',
   };
   const result = await db.collection('users').insertOne(userData);
   const savedUser = await db.collection('users')
@@ -97,9 +100,21 @@ async function createUser(_, { user }) {
   return savedUser;
 }
 
+async function updateAvatar(_, { img }, { user }) {
+  const db = getDB();
+  if (!user || !user.signedIn) {
+    throw new AuthenticationError('you must log in');
+  }
+  const { name } = user;
+  const result = await db.collection('users')
+    .updateOne({ name }, { $set: { avatar: img } });
+  return result.modifiedCount === 1;
+}
+
 module.exports = {
   createRecipe,
   deleteRecipe,
   updateRecipe,
   createUser,
+  updateAvatar,
 };

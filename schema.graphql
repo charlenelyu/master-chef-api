@@ -16,6 +16,7 @@ type User {
   name: String!
   email: String
   password: String
+  avatar: String!
   posts: [Recipe]!
   stars: [Recipe]
 }
@@ -35,6 +36,7 @@ type Mutation {
   createRecipe(recipe: RecipeInputs!): Recipe!
   deleteRecipe(id: ID!): Boolean!
   updateRecipe(id: ID!, changes: UpdateRecipeInput!): Recipe!
+  updateAvatar(img: String!): Boolean!
 }
 
 input RecipeInputs {
