@@ -43,7 +43,7 @@ routes.post('/login', async (req, res) => {
     res.status(403).send('invalid password');
   }
   const credentials = {
-    signedIn: true, name: user.name, email: user.email,
+    signedIn: true, name: user.name, email: user.email, avatar: user.avatar,
   };
   const token = jwt.sign(credentials, JWT_SECRET, { expiresIn: '7d' });
   res.cookie('jwt', token, { httpOnly: true });
