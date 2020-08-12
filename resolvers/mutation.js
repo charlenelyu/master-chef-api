@@ -30,7 +30,8 @@ async function createRecipe(_, { recipe }, { user }) {
   }
   const newRecipe = validateInput(recipe);
   newRecipe.created = new Date().toDateString();
-  newRecipe.id = await getNextSequence('recipes');
+  const id = await getNextSequence('recipes');
+  newRecipe.id = id.toString();
   newRecipe.author = user.name;
   const result = await db.collection('recipes').insertOne(newRecipe);
   const savedRecipe = await db.collection('recipes')
