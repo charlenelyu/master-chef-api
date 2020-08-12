@@ -14,10 +14,10 @@ type Recipe {
 type User {
   _id: ID!
   name: String!
-  email: String!
-  password: String!
+  email: String
+  password: String
   posts: [Recipe]!
-  stars: [Recipe]!
+  stars: [Recipe]
 }
 
 type Query {
