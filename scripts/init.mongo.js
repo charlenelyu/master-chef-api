@@ -166,7 +166,9 @@ db.counters.remove({ _id: 'recipes' });
 db.counters.insert({ _id: 'recipes', current: recipeCount });
 
 db.recipes.createIndex({ id: 1 }, { unique: true });
-db.recipes.createIndex({ author: 1 });
-db.recipes.createIndex({ tag: 1 });
+// db.recipes.createIndex({ author: 1 });
+// db.recipes.createIndex({ tag: 1 });
 db.recipes.createIndex({ title: 1 });
-db.recipes.createIndex({ ingredients: 1 });
+// db.recipes.createIndex({ ingredients: 1 });
+
+db.recipes.createIndex({ title: 'text' });

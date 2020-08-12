@@ -8,10 +8,12 @@ function getAboutMessage() {
   return aboutMessage;
 }
 
-async function recipeList(_, { tagfilter }) {
+async function recipeList(_, { tagfilter, search }) {
   const db = getDB();
   let recipes;
-  if (tagfilter) {
+  if (search) {
+    recipes = await db.collection('recipes').find({ $text: { $search: search } }).toArray();
+  } else if (tagfilter) {
     recipes = await db.collection('recipes')
       .find({ tags: { $in: tagfilter } }).toArray();
   } else {
