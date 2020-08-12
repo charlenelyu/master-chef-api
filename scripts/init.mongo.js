@@ -121,7 +121,7 @@ const recipeData = [
     description: "every since i've traveled to hawaii and tasted the poke bowl, i'm hooked! it's easy to make at home and perfect for a hot summer weeknight meal!",
     ingredients: ['short-grain rice', 'salmon', 'salt', 'green onion', 'toasted sesame seeds', 'light soy sauce', 'toasted sesame oil', 'rice vinegar', 'chili sauce', 'avocado', 'greens', 'pickled daikon'],
     steps: ['in a medium , whisk together the hawaiian salt , green onion , onion , sesame seeds , soy sauce , sesame oil , vinegar , and sriracha', 'then , gently toss the salmon in the sauce to coat , set aside', 'cut half of the avocado into thin slices', 'gently fan out the avocado slices into a long strip', 'start from one side and gently roll it up to create the flower shape', 'repeat with the remaining half of the avocado', 'to assemble:', 'place the avocado flower on top of the rice on one side of the bowl', 'then , spoon the poke salmon on the other side', 'garnish the top of the poke with micro greens', 'lastly , place a few pickled daikon between the poke and the avocado flower', 'repeat with the remaining ingredients to make another serving', 'enjoy !'],
-    tags: ['lunch', 'japanese'],
+    tags: ['lunch', 'asian'],
   },
   {
     id: '12',
