@@ -22,7 +22,7 @@ type User {
 
 type Query {
   about: String!
-  recipeList: [Recipe]!
+  recipeList(tagfilter: [String]): [Recipe]!
   "DELETED! userList: [User]!"
   recipeInfo(id: ID!): Recipe
   "DELETED mypost: [Recipe]!"

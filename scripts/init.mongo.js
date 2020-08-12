@@ -44,7 +44,7 @@ const recipeData = [
     description: 'the fiber-rich cookies are good for snacking.honey is a good option for sweetness as natural honey helps improving immunity. it is a healthy choice for those who love chocolate flavor and also for kids.',
     ingredients: ['oats', 'whole wheat flour', 'cocoa powder', 'milk', 'honey', 'butter'],
     steps: ['preheat oven to 180 degrees celsius', 'mix cocoa powder , butter , sugar , and milk in a pan', 'bring it to a boil , stirring continuously', 'remove it from flame', 'add oats , flour , and honey', 'mix well', 'with the help of a spoon pour one spoonful of the mixture on a waxed paper or greased cookie sheet', 'bake for 10-12 minutes till cooked', 'take out of oven , let it cool for few minutes on the tray before transferring it to a wire rack', 'let them cool on the wire rack before serving', 'store in an air-tight container'],
-    tags: ['breakfast', 'desserts', 'sweets'],
+    tags: ['breakfast', 'dessert', 'sweets'],
   },
   {
     id: '5',
