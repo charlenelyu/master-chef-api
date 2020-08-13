@@ -8,13 +8,25 @@ This is the repository for API of the final project on CS5610.
 
 [Git repo API](https://github.ccs.neu.edu/NEU-CS5610-SU20/GroupProject_Ladybugs_API) | [Git repo UI](https://github.ccs.neu.edu/NEU-CS5610-SU20/GroupProject_Ladybugs_UI)  
 
-[Iter1 on Piazza](https://piazza.com/class/k8hvaigksc71k1?cid=643) | [Iter2 on Piazza](https://piazza.com/class/k8hvaigksc71k1?cid=693)  
+[Iter1 on Piazza](https://piazza.com/class/k8hvaigksc71k1?cid=643) | [Iter2 on Piazza](https://piazza.com/class/k8hvaigksc71k1?cid=693) | [Iter3 on Piazza](https://piazza.com/class/k8hvaigksc71k1?cid=750)
 
 ## Project Summary
 **Project name:** Master Chef  
-Our project will provide a platform for people to share their daily meals and recipes. You can post your recipes including photos and detailed steps, or create a list to mark your favorite recipes. You will receive likes and comments from other users to what you post. We also want to make a recommendation page to show today’s top recipes.  
+Our project will provide a platform for people to share their daily meals and recipes.
+
+**Features:**
+- View recipes posted
+- Search recipes by title
+- Filter recipes by tags
+- After Login/SignUp:
+  - Create your own recipes
+  - Edit recipes you created (you cannot edit recipes created by other people)
+  - Delete recipes you created (you cannot delete recipes created by other people)
+  - Upload you own avatar
 
 The project is built on MERN stack, and we use **Ant Design UI** as the 3rd party libraries to help built UI.
+
+**Note:** If you want to test CRUD features, please register first, then you can create, edit and delete your recipes.
 
 ## Iteration 1 on API
 #### Progress
@@ -71,7 +83,42 @@ The project is built on MERN stack, and we use **Ant Design UI** as the 3rd part
 - Delete recipe
 ![iter2-6](/readme_img/iter2-6.png)
 
+
+## Iteration 3 on API
+### Progress
+- Implemented Login/Sign Up, Log out API
+- Implement filter, Search, updateAvatar API
+- Implement authentication process
+- Set CORS and Proxy Mode for deployment
+
+#### Contribution
+- **Tianhui Li**
+1. Implemented the Profile page. Move the CRUD operations of recipe cards to Profile page.
+2. Implemented searchRecipe API and integrated it with UI.
+3. Implemented updateAvatar API and integrated it with UI.
+4. Set context on `Page.jsx` to pass data from parent to child components.
+
+- **Yanghong Lyu**
+1. Implemented filter API and integrated it with UI.
+2. Created collection for user info.
+3. Implemented the createUser, me(queryUser) API.
+4. Implemented the whole authorization process: set new endpoint for auth, verify user in database and pass credentials, read cookie to verify the login state, clear cookie after signing out, new Login button that is authorization-aware.
+5. Add notification and message
+6. Set CORS and Proxy Mode for deploying
+
+#### Screenshots
+- User database
+![iter3-1](/readme_img/iter3-1.png)
+
+- Create user
+![iter3-2](/readme_img/iter3-2.png)
+
+- Search recipe
+![iter3-3](/readme_img/iter3-3.png)
+
 ## Run on Localhost
+**Note:** after Iter2 we start using `.env` to set environment, so the localhost may not work because you don't have the correct `.env` file.  
+
 1. Clone repositories: **GroupProject_Ladybugs_API** and **GroupProject_Ladybugs_UI**
 1. `npm install` to install all the dependencies
 2. GroupProject_Ladybugs_API: run `npm start`
