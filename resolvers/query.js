@@ -11,7 +11,7 @@ function getAboutMessage() {
 async function recipeList(_, { tagfilter, search }) {
   const db = getDB();
   const filter = {};
-  if (tagfilter) filter.tags.$in = tagfilter;
+  if (tagfilter) filter.tags = { $in: tagfilter };
   if (search) filter.$text = { $search: search };
   const recipes = await db.collection('recipes').find(filter).toArray();
   return recipes;
