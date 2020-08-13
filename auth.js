@@ -36,11 +36,13 @@ routes.post('/login', async (req, res) => {
   const db = getDB();
   const user = await db.collection('users').findOne({ email });
   if (!user) {
-    res.status(403).send('email does not exist');
+    res.json({ signedIn: false, message: 'email does not exist' });
+    return;
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    res.status(403).send('invalid password');
+    res.json({ signedIn: false, message: 'invalid password' });
+    return;
   }
   const credentials = {
     signedIn: true, name: user.name, email: user.email,
@@ -50,13 +52,13 @@ routes.post('/login', async (req, res) => {
   res.json(credentials);
 });
 
-routes.post('/signout', async (req, res) => {
+routes.post('/logout', async (req, res) => {
   res.clearCookie('jwt');
   res.json({ status: 'ok' });
 });
 
 routes.post('/user', (req, res) => {
-  res.send(getUser(req));
+  res.json(getUser(req));
 });
 
 module.exports = { routes, getUser };
